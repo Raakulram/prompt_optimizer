@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    const API_URL = "https://prompt-optimizer-xtle.onrender.com/optimize";
+
     const userPromptInput = document.getElementById('userPrompt');
     const optimizeBtn = document.getElementById('optimizeBtn');
     const btnText = document.querySelector('.btn-text');
@@ -8,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const outputContent = document.getElementById('outputContent');
     const copyBtn = document.getElementById('copyBtn');
 
-    // Copy button
     copyBtn.addEventListener('click', async () => {
         const textToCopy = outputContent.innerText;
         if (!textToCopy) return;
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         hideError();
 
         try {
-            const response = await fetch("http://127.0.0.1:8000/optimize", {
+            const response = await fetch(API_URL, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -42,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await response.json();
-            console.log("Backend:", data);
 
             if (data.result) {
                 outputContent.textContent = data.result;
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (err) {
             console.error(err);
-            showError("Backend not connected");
+            showError("Server error or backend sleeping (wait 30s)");
         }
 
         setLoading(false);
